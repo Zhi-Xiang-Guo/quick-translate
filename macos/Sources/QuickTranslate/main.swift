@@ -275,7 +275,7 @@ private enum AccessibilitySupport {
     static func canTranslateInFocusedApplication() -> Bool {
         if isEditableElementFocused() { return true }
         guard let application = NSWorkspace.shared.frontmostApplication else { return false }
-        let identity = ((application.bundleIdentifier ?? "") + " " + application.localizedName).lowercased()
+        let identity = ((application.bundleIdentifier ?? "") + " " + (application.localizedName ?? "")).lowercased()
         return ["wechat", "weixin", "wework", "feishu", "lark", "chatgpt"].contains {
             identity.contains($0)
         }
@@ -590,7 +590,7 @@ private final class QuickTranslateApplication: NSObject, NSApplicationDelegate {
     }
 }
 
-let application = NSApplication.shared
-let applicationDelegate = QuickTranslateApplication()
+private let application = NSApplication.shared
+private let applicationDelegate = QuickTranslateApplication()
 application.delegate = applicationDelegate
 application.run()
