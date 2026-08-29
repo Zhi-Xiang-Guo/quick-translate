@@ -1,0 +1,43 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    name: Windows
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Windows executable
+        shell: pwsh
+        run: ./windows/build.ps1
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: QuickTranslate-Windows
+          path: artifacts/windows/QuickTranslate.exe
+          if-no-files-found: error
+
+  macos:
+    name: macOS
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build macOS application
+        run: |
+          chmod +x ./macos/build.sh
+          ./macos/build.sh
+      - name: Package macOS application
+        run: ditto -c -k --sequesterRsrc --keepParent artifacts/macos/QuickTranslate.app artifacts/macos/QuickTranslate-macOS.zip
+      - name: Upload macOS artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: QuickTranslate-macOS
+          path: artifacts/macos/QuickTranslate-macOS.zip
+          if-no-files-found: error

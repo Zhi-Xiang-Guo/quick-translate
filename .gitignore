@@ -1,0 +1,6 @@
+artifacts/
+.DS_Store
+*.user
+*.suo
+*.log
+settings.json
