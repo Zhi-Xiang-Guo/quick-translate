@@ -1,22 +1,21 @@
 using System;
 using System.Runtime.InteropServices;
-using System.Threading;
+using System.Windows.Forms;
 
 namespace QuickTranslate
 {
-    internal sealed class TripleSpaceHook : IDisposable
+    internal sealed class TripleSpaceHook : NativeWindow, IDisposable
     {
         private const int WH_KEYBOARD_LL = 13;
         private const int WM_KEYDOWN = 0x0100;
         private const int WM_KEYUP = 0x0101;
         private const int WM_SYSKEYDOWN = 0x0104;
         private const int WM_SYSKEYUP = 0x0105;
-        private const uint LLKHF_INJECTED = 0x10;
+        private const int WM_TRIGGER = 0x8001;
         private const uint VK_SPACE = 0x20;
         private const int MaximumIntervalMilliseconds = 700;
 
         private readonly HookProcedure procedure;
-        private readonly SynchronizationContext synchronizationContext;
         private IntPtr hookHandle;
         private int spaceCount;
         private int lastSpaceTime;
@@ -26,13 +25,14 @@ namespace QuickTranslate
 
         public event EventHandler Triggered;
 
-        public TripleSpaceHook(bool acceptInjectedInput)
+        public TripleSpaceHook()
         {
+            CreateHandle(new CreateParams { Caption = "QuickTranslate.KeyboardDispatcher" });
             procedure = HookCallback;
-            synchronizationContext = SynchronizationContext.Current ?? new System.Windows.Forms.WindowsFormsSynchronizationContext();
             hookHandle = SetWindowsHookEx(WH_KEYBOARD_LL, procedure, GetModuleHandle(null), 0);
             if (hookHandle == IntPtr.Zero)
             {
+                DestroyHandle();
                 throw new InvalidOperationException("无法启用三击空格监听");
             }
         }
@@ -78,16 +78,9 @@ namespace QuickTranslate
                 {
                     spaceCount = 0;
                     sequenceWindow = IntPtr.Zero;
-                    if (NativeMethods.CanTranslateInFocusedApplication())
-                    {
-                        suppressSpaceUp = true;
-                        synchronizationContext.Post(delegate
-                        {
-                            EventHandler handler = Triggered;
-                            if (handler != null) handler(this, EventArgs.Empty);
-                        }, null);
-                        return new IntPtr(1);
-                    }
+                    suppressSpaceUp = true;
+                    PostMessage(Handle, WM_TRIGGER, IntPtr.Zero, IntPtr.Zero);
+                    return new IntPtr(1);
                 }
             }
             else if (keyDown && data.VirtualKey != 0x10 && data.VirtualKey != 0x11 && data.VirtualKey != 0x12)
@@ -99,6 +92,18 @@ namespace QuickTranslate
             return CallNextHookEx(hookHandle, code, wParam, lParam);
         }
 
+        protected override void WndProc(ref Message message)
+        {
+            if (message.Msg == WM_TRIGGER)
+            {
+                DiagnosticLog.Write("Triple-space dispatched to application");
+                EventHandler handler = Triggered;
+                if (handler != null) handler(this, EventArgs.Empty);
+                return;
+            }
+            base.WndProc(ref message);
+        }
+
         public void Dispose()
         {
             if (hookHandle != IntPtr.Zero)
@@ -106,6 +111,7 @@ namespace QuickTranslate
                 UnhookWindowsHookEx(hookHandle);
                 hookHandle = IntPtr.Zero;
             }
+            if (Handle != IntPtr.Zero) DestroyHandle();
         }
 
         private delegate IntPtr HookProcedure(int code, IntPtr wParam, IntPtr lParam);
@@ -129,6 +135,10 @@ namespace QuickTranslate
 
         [DllImport("user32.dll")]
         private static extern IntPtr CallNextHookEx(IntPtr hook, int code, IntPtr wParam, IntPtr lParam);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool PostMessage(IntPtr window, int message, IntPtr wParam, IntPtr lParam);
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern IntPtr GetModuleHandle(string moduleName);

@@ -100,21 +100,78 @@ namespace QuickTranslate
             if (IsPasswordElementFocused()) return false;
             if (IsEditableElementFocused()) return true;
 
+            return IsCompatibleForegroundApplication();
+        }
+
+        public static string DescribeFocusedApplication()
+        {
+            string processName = "unknown";
+            string windowClass = "unknown";
+            string controlType = "unknown";
+
+            try
+            {
+                IntPtr foreground = GetForegroundWindow();
+                uint processId;
+                GetWindowThreadProcessIdForProcess(foreground, out processId);
+                if (processId != 0)
+                {
+                    processName = Process.GetProcessById((int)processId).ProcessName;
+                }
+
+                uint threadId = GetWindowThreadProcessId(foreground, IntPtr.Zero);
+                GUITHREADINFO info = new GUITHREADINFO();
+                info.cbSize = Marshal.SizeOf(typeof(GUITHREADINFO));
+                if (GetGUIThreadInfo(threadId, ref info) && info.hwndFocus != IntPtr.Zero)
+                {
+                    StringBuilder className = new StringBuilder(256);
+                    GetClassName(info.hwndFocus, className, className.Capacity);
+                    windowClass = className.ToString();
+                }
+
+                AutomationElement focused = AutomationElement.FocusedElement;
+                object value = focused == null ? null : focused.GetCurrentPropertyValue(
+                    AutomationElement.ControlTypeProperty, true);
+                ControlType type = value as ControlType;
+                if (type != null) controlType = type.ProgrammaticName;
+            }
+            catch
+            {
+            }
+            return "process=" + processName + "; class=" + windowClass + "; control=" + controlType;
+        }
+
+        private static bool IsCompatibleForegroundApplication()
+        {
             try
             {
                 IntPtr foreground = GetForegroundWindow();
                 uint processId;
                 GetWindowThreadProcessIdForProcess(foreground, out processId);
                 if (processId == 0) return false;
-                string name = Process.GetProcessById((int)processId).ProcessName;
+
+                Process process = Process.GetProcessById((int)processId);
+                StringBuilder identity = new StringBuilder(process.ProcessName);
+                try
+                {
+                    FileVersionInfo version = process.MainModule.FileVersionInfo;
+                    identity.Append(' ').Append(version.ProductName);
+                    identity.Append(' ').Append(version.FileDescription);
+                    identity.Append(' ').Append(version.OriginalFilename);
+                }
+                catch
+                {
+                }
+
+                string value = identity.ToString();
                 string[] compatibleApplications =
                 {
-                    "Weixin", "WeChat", "WeChatAppEx", "WXWork",
-                    "Feishu", "Lark", "LarkShell", "ChatGPT"
+                    "Weixin", "WeChat", "WeChatAppEx", "WXWork", "微信", "企业微信",
+                    "Feishu", "Lark", "LarkShell", "飞书", "ChatGPT", "Codex"
                 };
                 foreach (string compatible in compatibleApplications)
                 {
-                    if (name.StartsWith(compatible, StringComparison.OrdinalIgnoreCase)) return true;
+                    if (value.IndexOf(compatible, StringComparison.OrdinalIgnoreCase) >= 0) return true;
                 }
             }
             catch

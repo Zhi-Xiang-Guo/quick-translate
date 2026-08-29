@@ -42,6 +42,11 @@ namespace QuickTranslate
             get { return input.Text; }
         }
 
+        public bool IsForeground
+        {
+            get { return NativeMethods.GetForegroundWindow() == Handle; }
+        }
+
         public void ActivateInput()
         {
             Show();
@@ -51,6 +56,12 @@ namespace QuickTranslate
             input.Focus();
             input.SelectionStart = input.TextLength;
             input.SelectionLength = 0;
+        }
+
+        public void ActivateAndSelectAll()
+        {
+            ActivateInput();
+            input.SelectAll();
         }
     }
 }

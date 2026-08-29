@@ -39,6 +39,8 @@
 
 程序使用低级键盘钩子识别三击空格，通过 UI Automation 判断当前焦点是否属于可编辑控件，再用 `Ctrl+A`、`Ctrl+C` 和 `Ctrl+V` 完成读取与替换。开机启动项写入当前用户的 `HKCU\Software\Microsoft\Windows\CurrentVersion\Run`。
 
+微信、飞书等 Chromium/自绘输入框使用应用兼容识别路径。键盘钩子中不执行 UI Automation 查询，避免目标程序响应较慢时被 Windows 停用钩子。排障日志保存在程序同目录的 `logs/quicktranslate.log`，只记录应用、控件类型、字符数与错误，不记录输入正文、译文或 API Key。
+
 ## macOS
 
 系统要求：macOS 13 或更高版本，构建时需要 Xcode Command Line Tools。

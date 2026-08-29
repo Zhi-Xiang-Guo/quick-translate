@@ -30,6 +30,7 @@ namespace QuickTranslate
             this.e2eResultPath = e2eResultPath;
             this.offlineE2E = offlineE2E;
             client = new TranslationClient();
+            DiagnosticLog.Write("Application started");
 
             ContextMenuStrip menu = new ContextMenuStrip();
             menu.Items.Add("打开设置", null, delegate { ShowSettings(); });
@@ -46,7 +47,7 @@ namespace QuickTranslate
 
             try
             {
-                triggerHook = new TripleSpaceHook(e2eMode);
+                triggerHook = new TripleSpaceHook();
                 triggerHook.Triggered += TripleSpaceTriggered;
             }
             catch (Exception error)
@@ -84,13 +85,26 @@ namespace QuickTranslate
 
         private async Task TranslateCurrentInputAsync()
         {
-            if (busy) return;
+            if (busy)
+            {
+                DiagnosticLog.Write("Trigger ignored because a translation is already running");
+                return;
+            }
             busy = true;
             ClipboardSnapshot previousClipboard = null;
             string source = null;
             try
             {
                 IntPtr originalWindow = NativeMethods.GetForegroundWindow();
+                if (e2eMode)
+                {
+                    if (!await EnsureE2EForegroundAsync())
+                    {
+                        throw new InvalidOperationException("自动测试窗口无法获得前台焦点");
+                    }
+                    originalWindow = NativeMethods.GetForegroundWindow();
+                }
+                DiagnosticLog.Write("Triple-space trigger; " + NativeMethods.DescribeFocusedApplication());
                 bool editableInputFocused = NativeMethods.CanTranslateInFocusedApplication();
                 if (!editableInputFocused)
                 {
@@ -102,12 +116,12 @@ namespace QuickTranslate
                 {
                     throw new InvalidOperationException("无法选择当前输入框内容");
                 }
-                await Task.Delay(80);
+                await Task.Delay(150);
                 if (!NativeMethods.SendChord(NativeMethods.VK_C))
                 {
                     throw new InvalidOperationException("无法复制当前输入框内容");
                 }
-                for (int attempt = 0; attempt < 25; attempt++)
+                for (int attempt = 0; attempt < 50; attempt++)
                 {
                     await Task.Delay(40);
                     source = ClipboardSnapshot.GetText();
@@ -122,6 +136,7 @@ namespace QuickTranslate
                 {
                     throw new InvalidOperationException("当前输入框中没有中文");
                 }
+                DiagnosticLog.Write("Input captured; characters=" + source.Length);
 
                 SetTrayStatus("快捷翻译 - 正在翻译");
                 string translated;
@@ -135,10 +150,11 @@ namespace QuickTranslate
                     translated = await client.TranslateAsync(source);
                 }
 
-                if (e2eMode && NativeMethods.GetForegroundWindow() != originalWindow && e2eForm != null)
+                if (e2eMode && e2eForm != null)
                 {
-                    e2eForm.ActivateInput();
-                    await Task.Delay(80);
+                    e2eForm.ActivateAndSelectAll();
+                    await Task.Delay(100);
+                    originalWindow = NativeMethods.GetForegroundWindow();
                 }
                 if (NativeMethods.GetForegroundWindow() != originalWindow)
                 {
@@ -158,11 +174,15 @@ namespace QuickTranslate
                 previousClipboard.Restore();
                 previousClipboard = null;
                 SetTrayStatus("快捷翻译");
+                DiagnosticLog.Write("Translation pasted successfully; characters=" + translated.Length);
 
                 FinishE2E(true, null, translated);
             }
             catch (Exception error)
             {
+                string safeError = error.Message;
+                if (!string.IsNullOrEmpty(source)) safeError = safeError.Replace(source, "[redacted]");
+                DiagnosticLog.Write("Translation failed; " + error.GetType().Name + ": " + safeError);
                 if (previousClipboard != null)
                 {
                     try { previousClipboard.Restore(); }
@@ -197,13 +217,30 @@ namespace QuickTranslate
                 await Task.Delay(700);
                 for (int press = 0; press < 3; press++)
                 {
-                    e2eForm.ActivateInput();
-                    await Task.Delay(80);
-                    NativeMethods.SendKey(NativeMethods.VK_SPACE);
+                    if (!await EnsureE2EForegroundAsync())
+                    {
+                        FinishE2E(false, "自动测试窗口无法获得前台焦点", null);
+                        return;
+                    }
+                    bool sent = NativeMethods.SendKey(NativeMethods.VK_SPACE);
+                    DiagnosticLog.Write("E2E space " + (press + 1) + "; sent=" + sent + "; " +
+                        NativeMethods.DescribeFocusedApplication());
                     await Task.Delay(120);
                 }
             };
             e2eForm.Show();
+        }
+
+        private async Task<bool> EnsureE2EForegroundAsync()
+        {
+            if (e2eForm == null) return false;
+            for (int attempt = 0; attempt < 20; attempt++)
+            {
+                e2eForm.ActivateInput();
+                await Task.Delay(100);
+                if (e2eForm.IsForeground) return true;
+            }
+            return false;
         }
 
         private void FinishE2E(bool success, string error, string translated)
@@ -294,6 +331,7 @@ namespace QuickTranslate
 
         private void ExitApplication()
         {
+            DiagnosticLog.Write("Application stopped");
             exiting = true;
             trayIcon.Visible = false;
             if (triggerHook != null) triggerHook.Dispose();
