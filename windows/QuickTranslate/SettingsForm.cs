@@ -163,9 +163,8 @@ namespace QuickTranslate
             try
             {
                 string result = await client.TranslateAsync("你好，世界！");
-                operationStatus.Text = "接口正常 · " + result;
+                operationStatus.Text = "接口正常 · Luna · " + result;
                 operationStatus.ForeColor = Color.FromArgb(22, 128, 79);
-                RefreshConfiguration();
             }
             catch (Exception error)
             {

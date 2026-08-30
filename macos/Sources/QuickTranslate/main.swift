@@ -4,6 +4,7 @@ import Foundation
 import ServiceManagement
 
 private let tripleSpaceInterval: TimeInterval = 0.7
+private let translationModel = "gpt-5.6-luna"
 
 private enum QuickTranslateError: LocalizedError {
     case message(String)
@@ -80,9 +81,6 @@ private enum CodexConfigLoader {
         guard let providerID = globals["model_provider"], !providerID.isEmpty else {
             throw QuickTranslateError.message("model_provider is missing from config.toml")
         }
-        guard let model = globals["model"], !model.isEmpty else {
-            throw QuickTranslateError.message("model is missing from config.toml")
-        }
         guard let provider = providers[providerID], let baseURL = provider["base_url"] else {
             throw QuickTranslateError.message("The active provider has no base_url")
         }
@@ -96,7 +94,7 @@ private enum CodexConfigLoader {
 
         let result = CodexConfig(
             providerName: provider["name"] ?? providerID,
-            model: model,
+            model: translationModel,
             baseURL: baseURL,
             wireAPI: provider["wire_api"] ?? "responses",
             apiKey: apiKey
@@ -139,6 +137,7 @@ private final class TranslationClient {
             if config.wireAPI.lowercased() == "responses" {
                 body["instructions"] = instructions
                 body["input"] = source
+                body["reasoning"] = ["effort": "low"]
                 body["max_output_tokens"] = 4000
                 body["store"] = false
             } else {
@@ -146,6 +145,7 @@ private final class TranslationClient {
                     ["role": "system", "content": instructions],
                     ["role": "user", "content": source]
                 ]
+                body["reasoning_effort"] = "low"
                 body["max_tokens"] = 4000
                 body["stream"] = false
             }
@@ -419,7 +419,7 @@ private final class TranslationCoordinator {
                 guard let self = self else { return }
                 self.busy = false
                 switch result {
-                case .success(let text): self.report("API OK: \(text)", error: false)
+                case .success(let text): self.report("API OK · Luna: \(text)", error: false)
                 case .failure(let error): self.report(error.localizedDescription, error: true)
                 }
             }
@@ -548,7 +548,7 @@ private final class QuickTranslateApplication: NSObject, NSApplicationDelegate {
             let monitor = TripleSpaceMonitor { [weak self] in self?.coordinator.translateCurrentInput() }
             try monitor.start()
             self.monitor = monitor
-            statusMenuItem.title = "Ready · press Space 3 times"
+            statusMenuItem.title = "Ready · Luna · press Space 3 times"
         } catch {
             statusMenuItem.title = error.localizedDescription
             NSSound.beep()

@@ -7,7 +7,8 @@
 - Windows 与 macOS 原生实现
 - 三击空格触发，间隔上限为 0.7 秒
 - 自动全选当前输入框并原地替换
-- 每次请求动态读取 CC Switch 写入的 `~/.codex/config.toml` 与 `auth.json`
+- 翻译模型固定为 `gpt-5.6-luna`，Responses 请求使用 `low` 推理档位
+- 每次请求动态读取 CC Switch 写入的供应商、接口协议、地址与 API Key
 - 支持 Codex `responses` 协议与 OpenAI 兼容的 `chat/completions` 协议
 - API Key 不复制到应用配置，也不写日志
 - 翻译后恢复原剪贴板
@@ -24,6 +25,8 @@
 5. 等待翻译完成，期间不要切换窗口或继续修改输入内容。
 
 前两次空格会短暂出现在输入框末尾，触发翻译后会随原文一起被英文替换。
+
+QuickTranslate 只覆盖自身请求中的模型字段，不修改 `~/.codex/config.toml`。CC Switch 和 Codex 主程序可以继续使用其他模型。
 
 ## Windows
 
@@ -80,6 +83,8 @@ macOS 版使用 `CGEventTap` 识别三击空格，通过 Accessibility API 判�
 - 翻译为自然、简洁的英文
 - 保留语义、语气、段落、Markdown、名称、数字、网址与代码片段
 - 只返回译文，不提供解释或注释
+
+模型固定使用 [`gpt-5.6-luna`](https://developers.openai.com/api/docs/models/gpt-5.6-luna)，适合低延迟、高频短文本翻译。
 
 ## 隐私
 

@@ -291,7 +291,7 @@ namespace QuickTranslate
             try
             {
                 string result = await client.TranslateAsync("你好，世界！");
-                ShowBalloon("接口正常", "测试译文：" + result, ToolTipIcon.Info);
+                ShowBalloon("接口正常 · Luna", "测试译文：" + result, ToolTipIcon.Info);
             }
             catch (Exception error)
             {

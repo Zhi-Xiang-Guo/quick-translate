@@ -8,6 +8,8 @@ namespace QuickTranslate
 {
     internal sealed class CcSwitchConfig
     {
+        public const string TranslationModel = "gpt-5.6-luna";
+
         public string ProviderName { get; private set; }
         public string Model { get; private set; }
         public string BaseUrl { get; private set; }
@@ -81,7 +83,6 @@ namespace QuickTranslate
             }
 
             string providerName = GetRequired(global, "model_provider", "Codex 配置缺少 model_provider");
-            string model = GetRequired(global, "model", "Codex 配置缺少 model");
             Dictionary<string, string> provider;
             if (!providers.TryGetValue(providerName, out provider))
             {
@@ -99,7 +100,7 @@ namespace QuickTranslate
 
             CcSwitchConfig result = new CcSwitchConfig();
             result.ProviderName = provider.ContainsKey("name") ? provider["name"] : providerName;
-            result.Model = model;
+            result.Model = TranslationModel;
             result.BaseUrl = GetRequired(provider, "base_url", "当前供应商配置缺少 base_url");
             result.WireApi = provider.ContainsKey("wire_api") ? provider["wire_api"] : "responses";
             result.ApiKey = Convert.ToString(apiKeyValue);

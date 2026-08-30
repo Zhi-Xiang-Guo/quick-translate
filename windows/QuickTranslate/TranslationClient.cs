@@ -38,6 +38,7 @@ namespace QuickTranslate
             {
                 body["instructions"] = Instructions;
                 body["input"] = source;
+                body["reasoning"] = new Dictionary<string, object> { { "effort", "low" } };
                 body["max_output_tokens"] = 4000;
                 body["store"] = false;
             }
@@ -48,9 +49,13 @@ namespace QuickTranslate
                     new Dictionary<string, object> { { "role", "system" }, { "content", Instructions } },
                     new Dictionary<string, object> { { "role", "user" }, { "content", source } }
                 };
+                body["reasoning_effort"] = "low";
                 body["max_tokens"] = 4000;
                 body["stream"] = false;
             }
+
+            DiagnosticLog.Write("API request; model=" + config.Model + "; wireApi=" + config.WireApi +
+                "; reasoning=low");
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             using (HttpClientHandler handler = new HttpClientHandler())
