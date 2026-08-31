@@ -1,0 +1,103 @@
+client:
+  name: basic
+  file-system: device-agnostic
+tools: {}
+targets:
+  "PackageStructure": ["<PackageStructure>"]
+  "QuickTranslateCore-arm64-apple-macosx-debug.module": ["<QuickTranslateCore-arm64-apple-macosx-debug.module>"]
+  "QuickTranslateCoreTests-arm64-apple-macosx-debug.exe": ["<QuickTranslateCoreTests-arm64-apple-macosx-debug.exe>"]
+  "QuickTranslateCoreTests-arm64-apple-macosx-debug.module": ["<QuickTranslateCoreTests-arm64-apple-macosx-debug.module>"]
+  "main": ["<QuickTranslateCore-arm64-apple-macosx-debug.module>","<QuickTranslateCoreTests-arm64-apple-macosx-debug.exe>","<QuickTranslateCoreTests-arm64-apple-macosx-debug.module>"]
+  "test": ["<QuickTranslateCore-arm64-apple-macosx-debug.module>","<QuickTranslateCoreTests-arm64-apple-macosx-debug.exe>","<QuickTranslateCoreTests-arm64-apple-macosx-debug.module>"]
+default: "main"
+nodes:
+  "/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/Sources/QuickTranslateCore/":
+    is-directory-structure: true
+    content-exclusion-patterns: [".git",".build"]
+  "/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/Tests/QuickTranslateCoreTests/":
+    is-directory-structure: true
+    content-exclusion-patterns: [".git",".build"]
+  "/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCoreTests":
+    is-mutated: true
+commands:
+  "/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCore.build/sources":
+    tool: write-auxiliary-file
+    inputs: ["<sources-file-list>","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/Sources/QuickTranslateCore/OfficialCodexTranslator.swift","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/Sources/QuickTranslateCore/PasteTargetPolicy.swift","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/Sources/QuickTranslateCore/TripleSpaceSequence.swift"]
+    outputs: ["/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCore.build/sources"]
+    description: "Write auxiliary file /Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCore.build/sources"
+
+  "/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCoreTests-entitlement.plist":
+    tool: write-auxiliary-file
+    inputs: ["<entitlement-plist>","<com.apple.security.get-task-allow>"]
+    outputs: ["/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCoreTests-entitlement.plist"]
+    description: "Write auxiliary file /Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCoreTests-entitlement.plist"
+
+  "/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCoreTests.build/sources":
+    tool: write-auxiliary-file
+    inputs: ["<sources-file-list>","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/Tests/QuickTranslateCoreTests/OfficialCodexTranslatorTests.swift"]
+    outputs: ["/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCoreTests.build/sources"]
+    description: "Write auxiliary file /Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCoreTests.build/sources"
+
+  "/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCoreTests.product/Objects.LinkFileList":
+    tool: write-auxiliary-file
+    inputs: ["<link-file-list>","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCore.build/OfficialCodexTranslator.swift.o","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCore.build/PasteTargetPolicy.swift.o","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCore.build/TripleSpaceSequence.swift.o","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCoreTests.build/OfficialCodexTranslatorTests.swift.o"]
+    outputs: ["/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCoreTests.product/Objects.LinkFileList"]
+    description: "Write auxiliary file /Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCoreTests.product/Objects.LinkFileList"
+
+  "/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/swift-version--1AB21518FC5DEDBE.txt":
+    tool: write-auxiliary-file
+    inputs: ["<swift-get-version>","/Library/Developer/CommandLineTools/usr/bin/swiftc"]
+    outputs: ["/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/swift-version--1AB21518FC5DEDBE.txt"]
+    always-out-of-date: "true"
+    description: "Write auxiliary file /Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/swift-version--1AB21518FC5DEDBE.txt"
+
+  "<QuickTranslateCore-arm64-apple-macosx-debug.module>":
+    tool: phony
+    inputs: ["/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCore.build/OfficialCodexTranslator.swift.o","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCore.build/PasteTargetPolicy.swift.o","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCore.build/TripleSpaceSequence.swift.o","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/Modules/QuickTranslateCore.swiftmodule"]
+    outputs: ["<QuickTranslateCore-arm64-apple-macosx-debug.module>"]
+
+  "<QuickTranslateCoreTests-arm64-apple-macosx-debug.exe>":
+    tool: phony
+    inputs: ["<QuickTranslateCoreTests-arm64-apple-macosx-debug.exe-CodeSigning>"]
+    outputs: ["<QuickTranslateCoreTests-arm64-apple-macosx-debug.exe>"]
+
+  "<QuickTranslateCoreTests-arm64-apple-macosx-debug.module>":
+    tool: phony
+    inputs: ["/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCoreTests.build/OfficialCodexTranslatorTests.swift.o","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/Modules/QuickTranslateCoreTests.swiftmodule"]
+    outputs: ["<QuickTranslateCoreTests-arm64-apple-macosx-debug.module>"]
+
+  "C.QuickTranslateCore-arm64-apple-macosx-debug.module":
+    tool: shell
+    inputs: ["/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/Sources/QuickTranslateCore/OfficialCodexTranslator.swift","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/Sources/QuickTranslateCore/PasteTargetPolicy.swift","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/Sources/QuickTranslateCore/TripleSpaceSequence.swift","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/swift-version--1AB21518FC5DEDBE.txt","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCore.build/sources"]
+    outputs: ["/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCore.build/OfficialCodexTranslator.swift.o","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCore.build/PasteTargetPolicy.swift.o","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCore.build/TripleSpaceSequence.swift.o","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/Modules/QuickTranslateCore.swiftmodule"]
+    description: "Compiling Swift Module 'QuickTranslateCore' (3 sources)"
+    args: ["/Library/Developer/CommandLineTools/usr/bin/swiftc","-module-name","QuickTranslateCore","-emit-dependencies","-emit-module","-emit-module-path","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/Modules/QuickTranslateCore.swiftmodule","-output-file-map","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCore.build/output-file-map.json","-parse-as-library","-incremental","-c","@/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCore.build/sources","-I","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/Modules","-target","arm64-apple-macosx13.0","-incremental","-enable-batch-mode","-serialize-diagnostics","-index-store-path","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/index/store","-Onone","-enable-testing","-j10","-DSWIFT_PACKAGE","-DDEBUG","-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE","-module-cache-path","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/ModuleCache","-parseable-output","-parse-as-library","-emit-objc-header","-emit-objc-header-path","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCore.build/include/QuickTranslateCore-Swift.h","-swift-version","6","-I","/Library/Developer/CommandLineTools/Library/Developer/Frameworks","-L","/Library/Developer/CommandLineTools/Library/Developer/Frameworks","-plugin-path","/Library/Developer/CommandLineTools/usr/lib/swift/host/plugins/testing","-sdk","/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk","-g","-Xcc","-isysroot","-Xcc","/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk","-Xcc","-fPIC","-Xcc","-g","-package-name","macos"]
+
+  "C.QuickTranslateCoreTests-arm64-apple-macosx-debug.exe":
+    tool: shell
+    inputs: ["/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCore.build/OfficialCodexTranslator.swift.o","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCore.build/PasteTargetPolicy.swift.o","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCore.build/TripleSpaceSequence.swift.o","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCoreTests.build/OfficialCodexTranslatorTests.swift.o","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCoreTests.product/Objects.LinkFileList"]
+    outputs: ["/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCoreTests"]
+    description: "Linking ./.build/arm64-apple-macosx/debug/QuickTranslateCoreTests"
+    args: ["/Library/Developer/CommandLineTools/usr/bin/swiftc","-L","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug","-o","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCoreTests","-module-name","QuickTranslateCoreTests","-Xlinker","-no_warn_duplicate_libraries","-emit-executable","-Xlinker","-alias","-Xlinker","_QuickTranslateCoreTests_main","-Xlinker","_main","-Xlinker","-rpath","-Xlinker","@loader_path","@/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCoreTests.product/Objects.LinkFileList","-Xlinker","-rpath","-Xlinker","/Library/Developer/CommandLineTools/usr/lib/swift-6.2/macosx","-target","arm64-apple-macosx13.0","-Xlinker","-add_ast_path","-Xlinker","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/Modules/QuickTranslateCore.swiftmodule","-Xlinker","-add_ast_path","-Xlinker","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/Modules/QuickTranslateCoreTests.swiftmodule","-I","/Library/Developer/CommandLineTools/Library/Developer/Frameworks","-L","/Library/Developer/CommandLineTools/Library/Developer/Frameworks","-plugin-path","/Library/Developer/CommandLineTools/usr/lib/swift/host/plugins/testing","-sdk","/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk","-g"]
+
+  "C.QuickTranslateCoreTests-arm64-apple-macosx-debug.exe-entitlements":
+    tool: shell
+    inputs: ["/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCoreTests","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCoreTests-entitlement.plist"]
+    outputs: ["<QuickTranslateCoreTests-arm64-apple-macosx-debug.exe-CodeSigning>"]
+    description: "Applying debug entitlements to ./.build/arm64-apple-macosx/debug/QuickTranslateCoreTests"
+    args: ["codesign","--force","--sign","-","--entitlements","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCoreTests-entitlement.plist","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCoreTests"]
+
+  "C.QuickTranslateCoreTests-arm64-apple-macosx-debug.module":
+    tool: shell
+    inputs: ["/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/Tests/QuickTranslateCoreTests/OfficialCodexTranslatorTests.swift","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/swift-version--1AB21518FC5DEDBE.txt","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/Modules/QuickTranslateCore.swiftmodule","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCoreTests.build/sources"]
+    outputs: ["/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCoreTests.build/OfficialCodexTranslatorTests.swift.o","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/Modules/QuickTranslateCoreTests.swiftmodule"]
+    description: "Compiling Swift Module 'QuickTranslateCoreTests' (1 sources)"
+    args: ["/Library/Developer/CommandLineTools/usr/bin/swiftc","-module-name","QuickTranslateCoreTests","-emit-dependencies","-emit-module","-emit-module-path","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/Modules/QuickTranslateCoreTests.swiftmodule","-output-file-map","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCoreTests.build/output-file-map.json","-incremental","-c","@/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCoreTests.build/sources","-I","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/Modules","-target","arm64-apple-macosx13.0","-incremental","-enable-batch-mode","-serialize-diagnostics","-index-store-path","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/index/store","-Onone","-enable-testing","-j10","-DSWIFT_PACKAGE","-DDEBUG","-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE","-module-cache-path","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/ModuleCache","-parseable-output","-Xfrontend","-entry-point-function-name","-Xfrontend","QuickTranslateCoreTests_main","-parse-as-library","-swift-version","6","-I","/Library/Developer/CommandLineTools/Library/Developer/Frameworks","-L","/Library/Developer/CommandLineTools/Library/Developer/Frameworks","-plugin-path","/Library/Developer/CommandLineTools/usr/lib/swift/host/plugins/testing","-sdk","/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk","-g","-Xcc","-isysroot","-Xcc","/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk","-Xcc","-fPIC","-Xcc","-g","-package-name","macos"]
+
+  "PackageStructure":
+    tool: package-structure-tool
+    inputs: ["/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/Sources/QuickTranslateCore/","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/Tests/QuickTranslateCoreTests/","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/Package.swift","/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/Package.resolved"]
+    outputs: ["<PackageStructure>"]
+    description: "Planning build"
+    allow-missing-inputs: true
+

@@ -1,0 +1,26 @@
+{
+  "": {
+    "swift-dependencies": "/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCore.build/primary.swiftdeps"
+  },
+  "/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/Sources/QuickTranslateCore/OfficialCodexTranslator.swift": {
+    "dependencies": "/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCore.build/OfficialCodexTranslator.d",
+    "object": "/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCore.build/OfficialCodexTranslator.swift.o",
+    "swiftmodule": "/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCore.build/OfficialCodexTranslator~partial.swiftmodule",
+    "swift-dependencies": "/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCore.build/OfficialCodexTranslator.swiftdeps",
+    "diagnostics": "/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCore.build/OfficialCodexTranslator.dia"
+  },
+  "/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/Sources/QuickTranslateCore/PasteTargetPolicy.swift": {
+    "dependencies": "/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCore.build/PasteTargetPolicy.d",
+    "object": "/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCore.build/PasteTargetPolicy.swift.o",
+    "swiftmodule": "/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCore.build/PasteTargetPolicy~partial.swiftmodule",
+    "swift-dependencies": "/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCore.build/PasteTargetPolicy.swiftdeps",
+    "diagnostics": "/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCore.build/PasteTargetPolicy.dia"
+  },
+  "/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/Sources/QuickTranslateCore/TripleSpaceSequence.swift": {
+    "dependencies": "/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCore.build/TripleSpaceSequence.d",
+    "object": "/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCore.build/TripleSpaceSequence.swift.o",
+    "swiftmodule": "/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCore.build/TripleSpaceSequence~partial.swiftmodule",
+    "swift-dependencies": "/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCore.build/TripleSpaceSequence.swiftdeps",
+    "diagnostics": "/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCore.build/TripleSpaceSequence.dia"
+  }
+}

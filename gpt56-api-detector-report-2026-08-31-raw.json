@@ -1,0 +1,664 @@
+{
+  "schema_version": 4,
+  "scoring_version": "trusted-fingerprint-v3",
+  "session_id": "d93f9a9730344a37aa9b6eb433fba900",
+  "mode": "single",
+  "preset": "custom",
+  "official": false,
+  "normalized_config": {
+    "mode": "single",
+    "workers": 3,
+    "retries": 2,
+    "request_formats": [
+      "native_codex"
+    ],
+    "context_modes": [
+      "no_history"
+    ],
+    "probes": {
+      "juice_high": {
+        "enabled": true,
+        "requests": 6,
+        "effort": "high"
+      },
+      "juice_low": {
+        "enabled": true,
+        "requests": 3,
+        "effort": "low"
+      },
+      "juice_xhigh": {
+        "enabled": true,
+        "requests": 3,
+        "effort": "xhigh"
+      },
+      "juice_max": {
+        "enabled": true,
+        "requests": 3,
+        "effort": "max"
+      },
+      "output_luna_48": {
+        "enabled": true,
+        "requests": 1
+      },
+      "output_terra_32": {
+        "enabled": true,
+        "requests": 1
+      },
+      "juice_coverage": {
+        "enabled": true,
+        "requests": 2
+      },
+      "rand_country": {
+        "enabled": true,
+        "requests": 10,
+        "effort": "low",
+        "window": 10
+      },
+      "rand_bird": {
+        "enabled": true,
+        "requests": 10,
+        "effort": "low",
+        "window": 10
+      },
+      "b80_letter_count": {
+        "enabled": true,
+        "requests": 10,
+        "effort": "low",
+        "window": 10
+      }
+    },
+    "schema_version": 2,
+    "preset": "custom",
+    "base_preset": "medium",
+    "official": false,
+    "config_hash": "1a16ee82aeabdf87fffbcc27dcdd42b4960fb798f8d564e926bfa24fd5e8cbf0",
+    "custom_probes": []
+  },
+  "config_hash": "1a16ee82aeabdf87fffbcc27dcdd42b4960fb798f8d564e926bfa24fd5e8cbf0",
+  "baseline_id": "stage-c-trusted-fingerprint-v3",
+  "baseline_sha256": "f4df50f1601c7ac4a81635c24032756a235f5c7cb2695d046cee30d2b482ed90",
+  "build_hash": "810f6cb975a609a6dffd661161dd78ed8a2519f128e8a677a99e402f4b4818c8",
+  "started_at": "2026-08-31T04:16:06.623169+00:00",
+  "updated_at": "2026-08-31T04:17:34.011924+00:00",
+  "claimed_model": "gpt-5.6-sol",
+  "request_model": "gpt-5.6-sol",
+  "candidate_configuration_without_key": {
+    "base_url": "https://ai.677001.xyz:8081/v1",
+    "claimed_model": "gpt-5.6-sol",
+    "request_model": "gpt-5.6-sol"
+  },
+  "request_profiles": [
+    "native_codex+no_history"
+  ],
+  "overall_verdict": "Juice通过；指纹证据不明确",
+  "outcome_code": "juice_pass_fingerprint_unclear",
+  "verdict_available": true,
+  "operational_status": "complete",
+  "title_cn": "Juice通过；指纹证据不明确（自定义参考）",
+  "subtitle_cn": "Juice 未发现型号冲突，但行为指纹没有形成正式强指向；请结合样本完整性和线路质量阅读。 当前为自定义档位，指纹匹配度仅供参考。",
+  "custom_preset": true,
+  "official_grade": false,
+  "trust_scope": "advisory_only",
+  "custom_changes": [
+    "request_formats",
+    "workers"
+  ],
+  "juice_verdict_state": "pass",
+  "fingerprint_verdict_state": "unclear",
+  "fingerprint_model": null,
+  "fingerprint_claim_mismatch": false,
+  "failed_items": [
+    {
+      "layer": "指纹匹配",
+      "reason_code": "no_exact_runtime_policy",
+      "reason_cn": "当前题面、请求次数或请求格式没有对应的4.1.1正式运行策略。"
+    },
+    {
+      "layer": "指纹匹配",
+      "reason_code": "custom_probe_reference_only",
+      "reason_cn": "导入的自定义探针未经发行版正式验证，匹配度仅供参考。"
+    }
+  ],
+  "common_causes": [
+    "模型行为落在强指向线以下",
+    "网络错误或缺样",
+    "题面或请求格式不受正式基线支持"
+  ],
+  "possible_models": [
+    {
+      "model": "gpt-5.6-sol",
+      "label_cn": "Sol",
+      "match": 0.9180375159461174,
+      "threshold": null,
+      "score": -1.402567669855003
+    },
+    {
+      "model": "gpt-5.6-luna",
+      "label_cn": "Luna",
+      "match": 0.06893492706650288,
+      "threshold": null,
+      "score": -3.9916429530650017
+    },
+    {
+      "model": "gpt-5.6-terra",
+      "label_cn": "Terra",
+      "match": 0.013027556987379707,
+      "threshold": null,
+      "score": -5.657739044501421
+    }
+  ],
+  "fingerprint_details": [
+    {
+      "model": "gpt-5.6-sol",
+      "label_cn": "Sol",
+      "match": 0.9180375159461174,
+      "threshold": null,
+      "score": -1.402567669855003
+    },
+    {
+      "model": "gpt-5.6-luna",
+      "label_cn": "Luna",
+      "match": 0.06893492706650288,
+      "threshold": null,
+      "score": -3.9916429530650017
+    },
+    {
+      "model": "gpt-5.6-terra",
+      "label_cn": "Terra",
+      "match": 0.013027556987379707,
+      "threshold": null,
+      "score": -5.657739044501421
+    }
+  ],
+  "juice_state": "juice_pass",
+  "juice_quality_warning": false,
+  "quality_note": null,
+  "limitations": [
+    "指纹匹配度只比较已导入的Sol/Terra/Luna可信答案分布，不是真实路由概率",
+    "自定义档位测试结果仅供参考",
+    "加密状态层不能区分 Sol/Terra/Luna",
+    "Juice 是可伪造的辅助指纹",
+    "综合通过不能排除透明代理、探针识别或普通请求差异化路由"
+  ],
+  "juice_summary": {
+    "claimed_model": "gpt-5.6-sol",
+    "state": "juice_pass",
+    "juice_mixed": false,
+    "juice_pass": true,
+    "juice_all_unsuccessful": false,
+    "data_insufficient": false,
+    "mixed_models_observed": [],
+    "per_effort": {
+      "low": {
+        "attempted": 3,
+        "valid_completed": 3,
+        "current_success": 3,
+        "mixed": 0,
+        "unsuccessful": 0,
+        "network_error": 0,
+        "shared_current_success": 1
+      },
+      "high": {
+        "attempted": 6,
+        "valid_completed": 6,
+        "current_success": 6,
+        "mixed": 0,
+        "unsuccessful": 0,
+        "network_error": 0,
+        "shared_current_success": 0
+      },
+      "xhigh": {
+        "attempted": 3,
+        "valid_completed": 3,
+        "current_success": 3,
+        "mixed": 0,
+        "unsuccessful": 0,
+        "network_error": 0,
+        "shared_current_success": 3
+      },
+      "max": {
+        "attempted": 3,
+        "valid_completed": 3,
+        "current_success": 3,
+        "mixed": 0,
+        "unsuccessful": 0,
+        "network_error": 0,
+        "shared_current_success": 3
+      }
+    },
+    "minimum_valid_by_effort": {
+      "low": 3,
+      "high": 6,
+      "xhigh": 3,
+      "max": 3
+    },
+    "missing_current_success_efforts": [],
+    "insufficient_valid_efforts": [],
+    "valid_completed": 15,
+    "current_success": 15,
+    "mixed": 0,
+    "unsuccessful": 0,
+    "network_errors": 0,
+    "quality_warning": false,
+    "quality_warning_reasons": [],
+    "sticky_events": [],
+    "window_mode": "single_run"
+  },
+  "output_integrity_summary": {
+    "window": 2,
+    "attempted_in_window": 2,
+    "requests": 2,
+    "exact": 2,
+    "invalid": 0,
+    "hard_anomaly": false,
+    "failures": [],
+    "invalid_rows": [],
+    "sticky_hard_anomaly": false
+  },
+  "coverage_summary": {
+    "window": 2,
+    "attempted_in_window": 2,
+    "requests": 2,
+    "hard_anomaly": false,
+    "classifications": {
+      "explicit_value": 2
+    },
+    "failures": [],
+    "sticky_hard_anomaly": false
+  },
+  "fingerprint_summary": {
+    "schema_version": 3,
+    "scoring_version": "trusted-fingerprint-v3",
+    "baseline_id": "stage-c-trusted-fingerprint-v3",
+    "baseline_sha256": "f4df50f1601c7ac4a81635c24032756a235f5c7cb2695d046cee30d2b482ed90",
+    "runtime_signature": "5fb4dc700379b4135193792f71b38da3b7cfe4bbb9cbf343335bc70457810228",
+    "runtime_name": "single:custom:1a16ee82aeab",
+    "decision_level": null,
+    "fingerprint_status": "unclear",
+    "fingerprint_model": null,
+    "fingerprint_match": {
+      "gpt-5.6-sol": 0.9180375159461174,
+      "gpt-5.6-terra": 0.013027556987379707,
+      "gpt-5.6-luna": 0.06893492706650288
+    },
+    "fingerprint_thresholds": {},
+    "fingerprint_official_eligible": false,
+    "fingerprint_unclear_reasons": [
+      "no_exact_runtime_policy"
+    ],
+    "winner": "gpt-5.6-sol",
+    "runner_up": "gpt-5.6-luna",
+    "scores": {
+      "gpt-5.6-sol": -1.402567669855003,
+      "gpt-5.6-terra": -5.657739044501421,
+      "gpt-5.6-luna": -3.9916429530650017
+    },
+    "family_contributions": {
+      "b80_letter_count": {
+        "family_weight": 0.9066848927089903,
+        "profile_count": 1,
+        "profile_keys": [
+          "b80_letter_count|native_codex+no_history"
+        ],
+        "profile_weight_sum": 0.9066848927089903,
+        "model_contributions": {
+          "gpt-5.6-sol": -0.018462062839735442,
+          "gpt-5.6-terra": -0.018462062839735442,
+          "gpt-5.6-luna": -0.1653924946935067
+        }
+      },
+      "rand_bird": {
+        "family_weight": 0.9409056519263291,
+        "profile_count": 1,
+        "profile_keys": [
+          "rand_bird|native_codex+no_history"
+        ],
+        "profile_weight_sum": 0.9409056519263291,
+        "model_contributions": {
+          "gpt-5.6-sol": -0.1133286853070031,
+          "gpt-5.6-terra": -1.9740810260220099,
+          "gpt-5.6-luna": -0.3090732624330986
+        }
+      },
+      "rand_country": {
+        "family_weight": 0.9147192969127863,
+        "profile_count": 1,
+        "profile_keys": [
+          "rand_country|native_codex+no_history"
+        ],
+        "profile_weight_sum": 0.9147192969127863,
+        "model_contributions": {
+          "gpt-5.6-sol": -1.3984583031937456,
+          "gpt-5.6-terra": -4.136324432054151,
+          "gpt-5.6-luna": -3.8819289253661524
+        }
+      }
+    },
+    "cell_details": {
+      "rand_country|native_codex+no_history": {
+        "probe_id": "rand_country",
+        "profile": "native_codex+no_history",
+        "counts": {
+          "__INVALID_OUTPUT__": 0,
+          "__OTHER__": 1,
+          "bhutan": 0,
+          "botswana": 0,
+          "chile": 0,
+          "iceland": 0,
+          "kazakhstan": 0,
+          "laos": 0,
+          "lesotho": 0,
+          "madagascar": 0,
+          "malta": 0,
+          "mauritius": 0,
+          "mongolia": 0,
+          "morocco": 0,
+          "namibia": 4,
+          "nepal": 0,
+          "paraguay": 0,
+          "peru": 0,
+          "portugal": 0,
+          "suriname": 0,
+          "uruguay": 5
+        },
+        "planned_samples": 10,
+        "minimum_completed_samples": 9,
+        "sample_count": 10,
+        "completion_ratio": 1.0,
+        "complete": true,
+        "weight": 0.9147192969127863,
+        "between_model_jsd": 0.5072457626092867,
+        "within_model_jsd": 0.04325827527332989,
+        "time_stability_verified": true,
+        "average_log_likelihood": {
+          "gpt-5.6-sol": -1.3984583031937456,
+          "gpt-5.6-terra": -4.136324432054151,
+          "gpt-5.6-luna": -3.8819289253661524
+        }
+      },
+      "rand_bird|native_codex+no_history": {
+        "probe_id": "rand_bird",
+        "profile": "native_codex+no_history",
+        "counts": {
+          "__INVALID_OUTPUT__": 0,
+          "__OTHER__": 0,
+          "albatross": 0,
+          "falcon": 0,
+          "heron": 0,
+          "kestrel": 0,
+          "kingfisher": 10,
+          "penguin": 0,
+          "peregrine": 0,
+          "puffin": 0,
+          "robin": 0,
+          "sparrow": 0
+        },
+        "planned_samples": 10,
+        "minimum_completed_samples": 9,
+        "sample_count": 10,
+        "completion_ratio": 1.0,
+        "complete": true,
+        "weight": 0.9409056519263291,
+        "between_model_jsd": 0.3371064086419097,
+        "within_model_jsd": 0.019921083450150173,
+        "time_stability_verified": true,
+        "average_log_likelihood": {
+          "gpt-5.6-sol": -0.1133286853070031,
+          "gpt-5.6-terra": -1.9740810260220099,
+          "gpt-5.6-luna": -0.3090732624330986
+        }
+      },
+      "b80_letter_count|native_codex+no_history": {
+        "probe_id": "b80_letter_count",
+        "profile": "native_codex+no_history",
+        "counts": {
+          "__INVALID_OUTPUT__": 0,
+          "__OTHER__": 0,
+          "exact_3": 10,
+          "other_integer": 0
+        },
+        "planned_samples": 10,
+        "minimum_completed_samples": 9,
+        "sample_count": 10,
+        "completion_ratio": 1.0,
+        "complete": true,
+        "weight": 0.9066848927089903,
+        "between_model_jsd": 0.038958626642805284,
+        "within_model_jsd": 0.003635428425083765,
+        "time_stability_verified": true,
+        "average_log_likelihood": {
+          "gpt-5.6-sol": -0.018462062839735442,
+          "gpt-5.6-terra": -0.018462062839735442,
+          "gpt-5.6-luna": -0.1653924946935067
+        }
+      }
+    },
+    "fingerprint_completeness": {
+      "rand_country|native_codex+no_history": {
+        "planned": 10,
+        "minimum": 9,
+        "completed": 10,
+        "ratio": 1.0,
+        "complete": true
+      },
+      "rand_bird|native_codex+no_history": {
+        "planned": 10,
+        "minimum": 9,
+        "completed": 10,
+        "ratio": 1.0,
+        "complete": true
+      },
+      "b80_letter_count|native_codex+no_history": {
+        "planned": 10,
+        "minimum": 9,
+        "completed": 10,
+        "ratio": 1.0,
+        "complete": true
+      }
+    },
+    "actual_samples": {
+      "rand_country|native_codex+no_history": 10,
+      "rand_bird|native_codex+no_history": 10,
+      "b80_letter_count|native_codex+no_history": 10
+    },
+    "planned_samples": {
+      "rand_country|native_codex+no_history": 10,
+      "rand_bird|native_codex+no_history": 10,
+      "b80_letter_count|native_codex+no_history": 10
+    },
+    "exact_contracts": {
+      "rand_country|native_codex+no_history": {
+        "probe_id": "rand_country",
+        "profile": "native_codex+no_history",
+        "user_prompt_sha256": "8b06206f5375301685f5dccc69f70fbc86d2fe10f78024da548d0472138873ca",
+        "developer_prompt_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "effort": "low",
+        "request_format": "native_codex",
+        "context_mode": "no_history",
+        "normalizer_hash": "c1c7eec348a586807477102a7ba4d981641a546af632efaf8bd8ace2be4067e2"
+      },
+      "rand_bird|native_codex+no_history": {
+        "probe_id": "rand_bird",
+        "profile": "native_codex+no_history",
+        "user_prompt_sha256": "49b58fba3dbbe92924007b79c5da5b898fed5289686e93899eb6a7bb507906f0",
+        "developer_prompt_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "effort": "low",
+        "request_format": "native_codex",
+        "context_mode": "no_history",
+        "normalizer_hash": "c1c7eec348a586807477102a7ba4d981641a546af632efaf8bd8ace2be4067e2"
+      },
+      "b80_letter_count|native_codex+no_history": {
+        "probe_id": "b80_letter_count",
+        "profile": "native_codex+no_history",
+        "user_prompt_sha256": "1257943fb9dc2f19f2f48541c69eaacb04386f311c47d07aa4c12fe77b74ee65",
+        "developer_prompt_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "effort": "low",
+        "request_format": "native_codex",
+        "context_mode": "no_history",
+        "normalizer_hash": "136467035bd0640c8b5a8152c071d086b4d7e9ee2c41a90637237e35ca167a1a"
+      }
+    },
+    "contract_failures": [],
+    "reference_only": true,
+    "fingerprint_name_cn": "与内置可信答案分布的相对指纹匹配度",
+    "component_id": "builtin",
+    "window_states": {
+      "rand_country|native_codex+no_history": {
+        "planned": 10,
+        "minimum": 9,
+        "attempted": 10,
+        "completed": 10,
+        "completion_ratio": 1.0,
+        "complete": true,
+        "final_errors": 0,
+        "cancelled": 0,
+        "counts": {
+          "namibia": 4,
+          "uruguay": 5,
+          "slovenia": 1
+        }
+      },
+      "rand_bird|native_codex+no_history": {
+        "planned": 10,
+        "minimum": 9,
+        "attempted": 10,
+        "completed": 10,
+        "completion_ratio": 1.0,
+        "complete": true,
+        "final_errors": 0,
+        "cancelled": 0,
+        "counts": {
+          "kingfisher": 10
+        }
+      },
+      "b80_letter_count|native_codex+no_history": {
+        "planned": 10,
+        "minimum": 9,
+        "attempted": 10,
+        "completed": 10,
+        "completion_ratio": 1.0,
+        "complete": true,
+        "final_errors": 0,
+        "cancelled": 0,
+        "counts": {
+          "exact_3": 10
+        }
+      }
+    },
+    "combination_policy": "single_builtin_fingerprint_baseline"
+  },
+  "reference_fingerprint_results": [],
+  "fingerprint_window_states": {
+    "rand_country|native_codex+no_history": {
+      "planned": 10,
+      "minimum": 9,
+      "attempted": 10,
+      "completed": 10,
+      "completion_ratio": 1.0,
+      "complete": true,
+      "final_errors": 0,
+      "cancelled": 0,
+      "counts": {
+        "namibia": 4,
+        "uruguay": 5,
+        "slovenia": 1
+      }
+    },
+    "rand_bird|native_codex+no_history": {
+      "planned": 10,
+      "minimum": 9,
+      "attempted": 10,
+      "completed": 10,
+      "completion_ratio": 1.0,
+      "complete": true,
+      "final_errors": 0,
+      "cancelled": 0,
+      "counts": {
+        "kingfisher": 10
+      }
+    },
+    "b80_letter_count|native_codex+no_history": {
+      "planned": 10,
+      "minimum": 9,
+      "attempted": 10,
+      "completed": 10,
+      "completion_ratio": 1.0,
+      "complete": true,
+      "final_errors": 0,
+      "cancelled": 0,
+      "counts": {
+        "exact_3": 10
+      }
+    }
+  },
+  "profile_summary": {
+    "native_codex+no_history": {
+      "logical_tasks": 49,
+      "successful": 49,
+      "final_errors": 0,
+      "cancelled": 0,
+      "fingerprint_windows": {
+        "rand_country|native_codex+no_history": {
+          "planned": 10,
+          "minimum": 9,
+          "attempted": 10,
+          "completed": 10,
+          "completion_ratio": 1.0,
+          "complete": true,
+          "final_errors": 0,
+          "cancelled": 0,
+          "counts": {
+            "namibia": 4,
+            "uruguay": 5,
+            "slovenia": 1
+          }
+        },
+        "rand_bird|native_codex+no_history": {
+          "planned": 10,
+          "minimum": 9,
+          "attempted": 10,
+          "completed": 10,
+          "completion_ratio": 1.0,
+          "complete": true,
+          "final_errors": 0,
+          "cancelled": 0,
+          "counts": {
+            "kingfisher": 10
+          }
+        },
+        "b80_letter_count|native_codex+no_history": {
+          "planned": 10,
+          "minimum": 9,
+          "attempted": 10,
+          "completed": 10,
+          "completion_ratio": 1.0,
+          "complete": true,
+          "final_errors": 0,
+          "cancelled": 0,
+          "counts": {
+            "exact_3": 10
+          }
+        }
+      }
+    }
+  },
+  "sticky_alerts": [],
+  "network_summary": {
+    "logical_tasks": 49,
+    "logical_completed": 49,
+    "successful": 49,
+    "final_errors": 0,
+    "cancelled": 0,
+    "http_attempts": 49,
+    "retries": 0,
+    "in_flight": 0
+  },
+  "network_error_details": [],
+  "retention_complete": true,
+  "retention_enabled": false,
+  "retention_directory_display": null,
+  "retention_manifest": null,
+  "run_stopped": false,
+  "stop_requested_at": null,
+  "auth_values_persisted": false
+}

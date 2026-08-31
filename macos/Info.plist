@@ -26,5 +26,7 @@
     <true/>
     <key>NSHighResolutionCapable</key>
     <true/>
+    <key>NSInputMonitoringUsageDescription</key>
+    <string>QuickTranslate monitors three consecutive Space key presses to trigger translation.</string>
 </dict>
 </plist>

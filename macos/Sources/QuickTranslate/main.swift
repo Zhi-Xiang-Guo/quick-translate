@@ -122,11 +122,17 @@ private enum CodexConfigLoader {
 }
 
 private final class TranslationClient {
+    private var useOfficialCodexClient = false
     private let instructions = """
     Translate the user's Chinese text into natural, concise English. Preserve meaning, tone, paragraph breaks, Markdown, names, numbers, URLs, and code fragments. Do not explain, annotate, quote, or wrap the translation. Output only the translated English text.
     """
 
     func translate(_ source: String, completion: @escaping (Result<String, Error>) -> Void) {
+        if useOfficialCodexClient {
+            translateWithOfficialCodex(source, completion: completion)
+            return
+        }
+
         do {
             let config = try CodexConfigLoader.load()
             guard let endpoint = config.endpoint else {
@@ -158,13 +164,22 @@ private final class TranslationClient {
             request.setValue("application/json", forHTTPHeaderField: "Accept")
             request.httpBody = try JSONSerialization.data(withJSONObject: body)
 
-            URLSession.shared.dataTask(with: request) { data, response, error in
+            URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+                guard let self = self else { return }
                 if let error = error {
                     completion(.failure(error))
                     return
                 }
                 guard let httpResponse = response as? HTTPURLResponse, let data = data else {
                     completion(.failure(QuickTranslateError.message("The API returned no response")))
+                    return
+                }
+                if DirectResponsePolicy.requiresOfficialCodexClient(
+                    statusCode: httpResponse.statusCode,
+                    data: data
+                ) {
+                    self.useOfficialCodexClient = true
+                    self.translateWithOfficialCodex(source, completion: completion)
                     return
                 }
                 do {
@@ -182,6 +197,21 @@ private final class TranslationClient {
             }.resume()
         } catch {
             completion(.failure(error))
+        }
+    }
+
+    private func translateWithOfficialCodex(
+        _ source: String,
+        completion: @escaping (Result<String, Error>) -> Void
+    ) {
+        Task {
+            do {
+                let translator = try OfficialCodexTranslator()
+                let text = try await translator.translate(source)
+                completion(.success(Self.clean(text)))
+            } catch {
+                completion(.failure(error))
+            }
         }
     }
 
@@ -246,9 +276,21 @@ private struct PasteboardSnapshot {
 }
 
 private enum AccessibilitySupport {
-    static func requestPermission() -> Bool {
+    static var permissionState: MonitorPermissionState {
+        MonitorPermissionState.evaluate(
+            accessibilityTrusted: AXIsProcessTrusted(),
+            inputMonitoringTrusted: CGPreflightListenEventAccess()
+        )
+    }
+
+    static func requestPermissions() -> MonitorPermissionState {
         let options = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true] as CFDictionary
-        return AXIsProcessTrustedWithOptions(options)
+        let accessibilityTrusted = AXIsProcessTrustedWithOptions(options)
+        let inputMonitoringTrusted = CGPreflightListenEventAccess() || CGRequestListenEventAccess()
+        return MonitorPermissionState.evaluate(
+            accessibilityTrusted: accessibilityTrusted,
+            inputMonitoringTrusted: inputMonitoringTrusted
+        )
     }
 
     static func isEditableElementFocused() -> Bool {
@@ -285,9 +327,7 @@ private enum AccessibilitySupport {
 private final class TripleSpaceMonitor {
     private var eventTap: CFMachPort?
     private var runLoopSource: CFRunLoopSource?
-    private var count = 0
-    private var lastPress = Date.distantPast
-    private var sequencePID: pid_t = 0
+    private var sequence = TripleSpaceSequence(maxInterval: tripleSpaceInterval)
     private var suppressNextSpaceUp = false
     private let onTrigger: () -> Void
 
@@ -319,6 +359,7 @@ private final class TripleSpaceMonitor {
 
     func handle(type: CGEventType, event: CGEvent) -> Unmanaged<CGEvent>? {
         if type == .tapDisabledByTimeout || type == .tapDisabledByUserInput {
+            sequence.cancel()
             if let eventTap = eventTap { CGEvent.tapEnable(tap: eventTap, enable: true) }
             return Unmanaged.passUnretained(event)
         }
@@ -326,6 +367,7 @@ private final class TripleSpaceMonitor {
         let keyCode = event.getIntegerValueField(.keyboardEventKeycode)
         let isSpace = keyCode == 49
         if type == .keyUp, isSpace {
+            sequence.handleKeyUp()
             if suppressNextSpaceUp {
                 suppressNextSpaceUp = false
                 return nil
@@ -333,32 +375,23 @@ private final class TripleSpaceMonitor {
             return Unmanaged.passUnretained(event)
         }
         guard type == .keyDown else { return Unmanaged.passUnretained(event) }
-        if event.getIntegerValueField(.keyboardEventAutorepeat) != 0 {
-            return Unmanaged.passUnretained(event)
-        }
+        let isRepeat = event.getIntegerValueField(.keyboardEventAutorepeat) != 0
 
         if isSpace {
-            let now = Date()
             let pid = NSWorkspace.shared.frontmostApplication?.processIdentifier ?? 0
-            if now.timeIntervalSince(lastPress) > tripleSpaceInterval || pid != sequencePID {
-                count = 1
-                sequencePID = pid
-            } else {
-                count += 1
-            }
-            lastPress = now
-            if count >= 3 {
-                count = 0
-                sequencePID = 0
+            if sequence.handleKeyDown(
+                at: Date.timeIntervalSinceReferenceDate,
+                processID: pid,
+                isRepeat: isRepeat
+            ) {
                 if AccessibilitySupport.canTranslateInFocusedApplication() {
                     suppressNextSpaceUp = true
                     DispatchQueue.main.async { [onTrigger] in onTrigger() }
                     return nil
                 }
             }
-        } else if ![55, 56, 58, 59, 60, 61, 62].contains(keyCode) {
-            count = 0
-            sequencePID = 0
+        } else if !isRepeat, ![55, 56, 58, 59, 60, 61, 62].contains(keyCode) {
+            sequence.cancel()
         }
         return Unmanaged.passUnretained(event)
     }
@@ -392,7 +425,9 @@ private final class TranslationCoordinator {
             return
         }
         busy = true
-        let sourcePID = NSWorkspace.shared.frontmostApplication?.processIdentifier ?? 0
+        let sourceApplication = NSWorkspace.shared.frontmostApplication
+        let sourcePID = sourceApplication?.processIdentifier ?? 0
+        let sourceBundleIdentifier = sourceApplication?.bundleIdentifier
         let pasteboard = NSPasteboard.general
         let snapshot = PasteboardSnapshot(pasteboard)
         pasteboard.clearContents()
@@ -405,6 +440,7 @@ private final class TranslationCoordinator {
                 attempt: 0,
                 initialChangeCount: emptyChangeCount,
                 sourcePID: sourcePID,
+                sourceBundleIdentifier: sourceBundleIdentifier,
                 snapshot: snapshot
             )
         }
@@ -430,6 +466,7 @@ private final class TranslationCoordinator {
         attempt: Int,
         initialChangeCount: Int,
         sourcePID: pid_t,
+        sourceBundleIdentifier: String?,
         snapshot: PasteboardSnapshot
     ) {
         let pasteboard = NSPasteboard.general
@@ -447,7 +484,12 @@ private final class TranslationCoordinator {
             }
             client.translate(source) { [weak self] result in
                 DispatchQueue.main.async {
-                    self?.handleTranslation(result, sourcePID: sourcePID, snapshot: snapshot)
+                    self?.handleTranslation(
+                        result,
+                        sourcePID: sourcePID,
+                        sourceBundleIdentifier: sourceBundleIdentifier,
+                        snapshot: snapshot
+                    )
                 }
             }
             return
@@ -462,6 +504,7 @@ private final class TranslationCoordinator {
                 attempt: attempt + 1,
                 initialChangeCount: initialChangeCount,
                 sourcePID: sourcePID,
+                sourceBundleIdentifier: sourceBundleIdentifier,
                 snapshot: snapshot
             )
         }
@@ -470,6 +513,7 @@ private final class TranslationCoordinator {
     private func handleTranslation(
         _ result: Result<String, Error>,
         sourcePID: pid_t,
+        sourceBundleIdentifier: String?,
         snapshot: PasteboardSnapshot
     ) {
         switch result {
@@ -480,16 +524,44 @@ private final class TranslationCoordinator {
             let pasteboard = NSPasteboard.general
             pasteboard.clearContents()
             pasteboard.setString(translation, forType: .string)
-            guard NSWorkspace.shared.frontmostApplication?.processIdentifier == sourcePID else {
+            guard canPasteBack(
+                sourcePID: sourcePID,
+                sourceBundleIdentifier: sourceBundleIdentifier
+            ) else {
                 finish("Focus changed; translation copied to clipboard", error: true)
                 return
             }
-            postCommandShortcut(keyCode: 9)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-                snapshot.restore()
-                self?.finish("Ready", error: false)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) { [weak self] in
+                guard let self = self else { return }
+                guard self.canPasteBack(
+                    sourcePID: sourcePID,
+                    sourceBundleIdentifier: sourceBundleIdentifier
+                ) else {
+                    self.finish("Focus changed; translation copied to clipboard", error: true)
+                    return
+                }
+                self.postCommandShortcut(keyCode: 9)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
+                    snapshot.restore()
+                    self?.finish("Ready", error: false)
+                }
             }
         }
+    }
+
+    private func canPasteBack(
+        sourcePID: pid_t,
+        sourceBundleIdentifier: String?
+    ) -> Bool {
+        guard let currentApplication = NSWorkspace.shared.frontmostApplication else {
+            return false
+        }
+        return PasteTargetPolicy.shouldPaste(
+            sourceProcessID: sourcePID,
+            sourceBundleIdentifier: sourceBundleIdentifier,
+            currentProcessID: currentApplication.processIdentifier,
+            currentBundleIdentifier: currentApplication.bundleIdentifier
+        )
     }
 
     private func postCommandShortcut(keyCode: CGKeyCode) {
@@ -526,6 +598,7 @@ private enum StartupManager {
 private final class QuickTranslateApplication: NSObject, NSApplicationDelegate {
     private let coordinator = TranslationCoordinator()
     private var monitor: TripleSpaceMonitor?
+    private var permissionTimer: Timer?
     private var statusItem: NSStatusItem!
     private var statusMenuItem: NSMenuItem!
 
@@ -540,8 +613,29 @@ private final class QuickTranslateApplication: NSObject, NSApplicationDelegate {
         do { try StartupManager.enable() }
         catch { statusMenuItem.title = "Login item: \(error.localizedDescription)" }
 
-        guard AccessibilitySupport.requestPermission() else {
-            statusMenuItem.title = "Grant Accessibility permission, then reopen"
+        startMonitorWhenAuthorized()
+    }
+
+    private func startMonitorWhenAuthorized() {
+        guard monitor == nil else { return }
+        let permissionState = AccessibilitySupport.requestPermissions()
+        guard permissionState == .ready else {
+            switch permissionState {
+            case .waitingForAccessibility:
+                statusMenuItem.title = "Grant Accessibility permission"
+            case .waitingForInputMonitoring:
+                statusMenuItem.title = "Grant Input Monitoring permission"
+            case .ready:
+                break
+            }
+            permissionTimer?.invalidate()
+            permissionTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) {
+                [weak self] timer in
+                guard AccessibilitySupport.permissionState == .ready else { return }
+                timer.invalidate()
+                self?.permissionTimer = nil
+                self?.startMonitorWhenAuthorized()
+            }
             return
         }
         do {

@@ -16,6 +16,9 @@ xcrun swiftc \
   -framework AppKit \
   -framework ApplicationServices \
   -framework ServiceManagement \
+  "$SCRIPT_DIR/Sources/QuickTranslateCore/OfficialCodexTranslator.swift" \
+  "$SCRIPT_DIR/Sources/QuickTranslateCore/PasteTargetPolicy.swift" \
+  "$SCRIPT_DIR/Sources/QuickTranslateCore/TripleSpaceSequence.swift" \
   "$SCRIPT_DIR/Sources/QuickTranslate/main.swift" \
   -o "$MACOS_DIR/QuickTranslate"
 

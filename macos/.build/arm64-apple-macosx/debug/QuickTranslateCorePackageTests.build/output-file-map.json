@@ -1,0 +1,12 @@
+{
+  "": {
+    "swift-dependencies": "/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCorePackageTests.build/primary.swiftdeps"
+  },
+  "/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCorePackageTests.derived/runner.swift": {
+    "dependencies": "/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCorePackageTests.build/runner.d",
+    "object": "/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCorePackageTests.build/runner.swift.o",
+    "swiftmodule": "/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCorePackageTests.build/runner~partial.swiftmodule",
+    "swift-dependencies": "/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCorePackageTests.build/runner.swiftdeps",
+    "diagnostics": "/Users/guozhixiang/Documents/ChatGPT/问题 2/macos/.build/arm64-apple-macosx/debug/QuickTranslateCorePackageTests.build/runner.dia"
+  }
+}
